@@ -3,6 +3,7 @@ import { startOfHour } from 'date-fns';
 import { getCustomRepository } from 'typeorm';
 import Appointment from '../models/Appointment';
 import AppointmentsRepository from '../repositories/Appointments.repository';
+import AppError from '../errors/AppError';
 
 interface Request {
     provider_id: string;
@@ -26,7 +27,7 @@ class CreateAppointmentService {
 
         // Retorno de horário já agendado como solicitado na regra de negócio
         if (findAppointmentInSameDate) {
-            throw Error('This appointment already booked');
+            throw new AppError('This appointment already booked', 400);
         }
 
         // Altera no banco
