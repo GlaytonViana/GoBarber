@@ -2,6 +2,7 @@ import 'reflect-metadata';
 
 // O express async errors deve ser exportado logo após o express
 import express, { Request, Response, NextFunction } from 'express';
+import cors from 'cors';
 import 'express-async-errors';
 
 import routes from './routes';
@@ -11,6 +12,7 @@ import AppError from './errors/AppError';
 import './database';
 
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 
