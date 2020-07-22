@@ -4,45 +4,45 @@ import CreateUserService from '@modules/users/services/CreateUserService';
 import AppError from '@shared/errors/AppError';
 
 describe('CreateUser', () => {
-    it('should be able to create a new user', async () => {
-        const fakeUsersRepository = new FakeUsersRepository();
-        const fakeHashProvider = new FakeHashProvider();
+  it('should be able to create a new user', async () => {
+    const fakeUsersRepository = new FakeUsersRepository();
+    const fakeHashProvider = new FakeHashProvider();
 
-        const createUser = new CreateUserService(
-            fakeUsersRepository,
-            fakeHashProvider,
-        );
+    const createUser = new CreateUserService(
+      fakeUsersRepository,
+      fakeHashProvider,
+    );
 
-        const user = await createUser.execute({
-            name: 'John Doe',
-            email: 'john@mail.com',
-            password: '123456',
-        });
-
-        expect(user).toHaveProperty('id');
+    const user = await createUser.execute({
+      name: 'John Doe',
+      email: 'john@mail.com',
+      password: '123456',
     });
 
-    it('should not be able to create a new user with same e-mail from another', async () => {
-        const fakeUsersRepository = new FakeUsersRepository();
-        const fakeHashProvider = new FakeHashProvider();
+    expect(user).toHaveProperty('id');
+  });
 
-        const createUser = new CreateUserService(
-            fakeUsersRepository,
-            fakeHashProvider,
-        );
+  it('should not be able to create a new user with same e-mail from another', async () => {
+    const fakeUsersRepository = new FakeUsersRepository();
+    const fakeHashProvider = new FakeHashProvider();
 
-        await createUser.execute({
-            name: 'John Doe',
-            email: 'john@mail.com',
-            password: '123456',
-        });
+    const createUser = new CreateUserService(
+      fakeUsersRepository,
+      fakeHashProvider,
+    );
 
-        expect(
-            createUser.execute({
-                name: 'John Doe',
-                email: 'john@mail.com',
-                password: '123456',
-            }),
-        ).rejects.toBeInstanceOf(AppError);
+    await createUser.execute({
+      name: 'John Doe',
+      email: 'john@mail.com',
+      password: '123456',
     });
+
+    await expect(
+      createUser.execute({
+        name: 'John Doe',
+        email: 'john@mail.com',
+        password: '123456',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
 });

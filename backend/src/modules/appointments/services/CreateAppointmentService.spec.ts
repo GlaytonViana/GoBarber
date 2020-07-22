@@ -3,39 +3,39 @@ import CreateAppointmentService from '@modules/appointments/services/CreateAppoi
 import AppError from '@shared/errors/AppError';
 
 describe('CreateAppointment', () => {
-    it('should be able to create a new appointment', async () => {
-        const fakeAppointmentsRepository = new FakeAppointmentsRepository();
-        const createAppointment = new CreateAppointmentService(
-            fakeAppointmentsRepository,
-        );
+  it('should be able to create a new appointment', async () => {
+    const fakeAppointmentsRepository = new FakeAppointmentsRepository();
+    const createAppointment = new CreateAppointmentService(
+      fakeAppointmentsRepository,
+    );
 
-        const appointment = await createAppointment.execute({
-            date: new Date(),
-            provider_id: '12341234',
-        });
-
-        expect(appointment).toHaveProperty('id');
-        expect(appointment.provider_id).toBe('12341234');
+    const appointment = await createAppointment.execute({
+      date: new Date(),
+      provider_id: '12341234',
     });
 
-    it('should not be able to create two appointments on the same time', async () => {
-        const fakeAppointmentsRepository = new FakeAppointmentsRepository();
-        const createAppointment = new CreateAppointmentService(
-            fakeAppointmentsRepository,
-        );
+    expect(appointment).toHaveProperty('id');
+    expect(appointment.provider_id).toBe('12341234');
+  });
 
-        const createAppointmentDate = new Date();
+  it('should not be able to create two appointments on the same time', async () => {
+    const fakeAppointmentsRepository = new FakeAppointmentsRepository();
+    const createAppointment = new CreateAppointmentService(
+      fakeAppointmentsRepository,
+    );
 
-        await createAppointment.execute({
-            date: createAppointmentDate,
-            provider_id: '12341234',
-        });
+    const createAppointmentDate = new Date();
 
-        expect(
-            createAppointment.execute({
-                date: createAppointmentDate,
-                provider_id: '12341234',
-            }),
-        ).rejects.toBeInstanceOf(AppError);
+    await createAppointment.execute({
+      date: createAppointmentDate,
+      provider_id: '12341234',
     });
+
+    await expect(
+      createAppointment.execute({
+        date: createAppointmentDate,
+        provider_id: '12341234',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
+  });
 });

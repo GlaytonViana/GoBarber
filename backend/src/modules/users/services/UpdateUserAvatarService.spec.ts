@@ -40,7 +40,7 @@ describe('Update user Avatar', () => {
 
     const avatarFileName = 'avatar.jpg';
 
-    expect(
+    await expect(
       updateUserAvatar.execute({
         avatarFileName,
         user_id: 'non-exiting-user',
